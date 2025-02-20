@@ -1,5 +1,6 @@
 package com.devsuperior.dsmeta.controllers;
 
+import com.devsuperior.dsmeta.dto.ReportDTO;
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
 import com.devsuperior.dsmeta.dto.SummaryDTO;
 import com.devsuperior.dsmeta.services.SaleService;
@@ -23,9 +24,11 @@ public class SaleController {
 	}
 
 	@GetMapping(value = "/report")
-	public ResponseEntity<?> getReport() {
-		// TODO
-		return null;
+	public ResponseEntity<Page<ReportDTO>> getReport(@RequestParam(name = "minDate", required = false) String minDate,
+													 @RequestParam(name = "maxDate", required = false) String maxDate,
+													 @RequestParam(name = "name", defaultValue = "") String name, Pageable pageable) {
+		Page<ReportDTO> reportDTO = service.getReport(minDate, maxDate, name, pageable);
+		return ResponseEntity.ok(reportDTO);
 	}
 
 	@GetMapping(value = "/summary")

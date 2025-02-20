@@ -1,5 +1,6 @@
 package com.devsuperior.dsmeta.services;
 
+import com.devsuperior.dsmeta.dto.ReportDTO;
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
 import com.devsuperior.dsmeta.dto.SummaryDTO;
 import com.devsuperior.dsmeta.entities.Sale;
@@ -27,21 +28,27 @@ public class SaleService {
 	}
 
 	public Page<SummaryDTO> getSummary(String start, String stop, Pageable pageable){
+
 		LocalDate maxDate;
 		LocalDate minDate;
-		if (stop == null){
-			maxDate = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
-		} else {
-			maxDate = LocalDate.parse(stop);
-		}
-		if (start == null){
-			minDate = maxDate.minusYears(1L);
-		} else {
-			minDate = LocalDate.parse(start);
-		}
 
-		Page<Sale> sales = repository.searchSalesByDateRange(minDate, maxDate, pageable);
-		Page<SummaryDTO> summaryDTO = sales.map(x -> new SummaryDTO(x));
+		maxDate = (stop == null) ? LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault()) : LocalDate.parse(stop);
+		minDate = (start == null) ? maxDate.minusYears(1L) : LocalDate.parse(start);
+
+		Page<SummaryDTO> summaryDTO = repository.searchSalesPerSellerByDateRange(minDate, maxDate, pageable);
 		return summaryDTO;
+	}
+
+	public Page<ReportDTO> getReport(String start, String stop, String name, Pageable pageable){
+
+		LocalDate maxDate;
+		LocalDate minDate;
+
+		maxDate = (stop == null) ? LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault()) : LocalDate.parse(stop);
+		minDate = (start == null) ? maxDate.minusYears(1L) : LocalDate.parse(start);
+
+		Page<Sale> sales = repository.searchBySellerNameAndDateRange(minDate, maxDate, name, pageable);
+		Page<ReportDTO> reportDTO = sales.map(x -> new ReportDTO(x));
+		return reportDTO;
 	}
 }
