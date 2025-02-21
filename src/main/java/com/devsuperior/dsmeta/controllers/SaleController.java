@@ -14,27 +14,27 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/sales")
 public class SaleController {
 
-	@Autowired
-	private SaleService service;
-	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<SaleMinDTO> findById(@PathVariable Long id) {
-		SaleMinDTO dto = service.findById(id);
-		return ResponseEntity.ok(dto);
-	}
+    @Autowired
+    private SaleService service;
 
-	@GetMapping(value = "/report")
-	public ResponseEntity<Page<ReportDTO>> getReport(@RequestParam(name = "minDate", required = false) String minDate,
-													 @RequestParam(name = "maxDate", required = false) String maxDate,
-													 @RequestParam(name = "name", defaultValue = "") String name, Pageable pageable) {
-		Page<ReportDTO> reportDTO = service.getReport(minDate, maxDate, name, pageable);
-		return ResponseEntity.ok(reportDTO);
-	}
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<SaleMinDTO> findById(@PathVariable Long id) {
+        SaleMinDTO dto = service.findById(id);
+        return ResponseEntity.ok(dto);
+    }
 
-	@GetMapping(value = "/summary")
-	public ResponseEntity<Page<SummaryDTO>> getSummary(@RequestParam(name = "minDate", required = false) String minDate,
-													   @RequestParam(name = "maxDate", required = false) String maxDate, Pageable pageable) {
-		Page<SummaryDTO> summaryDTO = service.getSummary(minDate, maxDate, pageable);
-		return ResponseEntity.ok(summaryDTO);
-	}
+    @GetMapping(value = "/report")
+    public ResponseEntity<Page<ReportDTO>> getReport(@RequestParam(name = "minDate", required = false) String minDate,
+                                                     @RequestParam(name = "maxDate", required = false) String maxDate,
+                                                     @RequestParam(name = "name", defaultValue = "") String name, Pageable pageable) {
+        Page<ReportDTO> reportDTO = service.getReport(minDate, maxDate, name, pageable);
+        return ResponseEntity.ok(reportDTO);
+    }
+
+    @GetMapping(value = "/summary")
+    public ResponseEntity<Page<SummaryDTO>> getSummary(@RequestParam(name = "minDate", required = false) String minDate,
+                                                       @RequestParam(name = "maxDate", required = false) String maxDate, Pageable pageable) {
+        Page<SummaryDTO> summaryDTO = service.getSummary(minDate, maxDate, pageable);
+        return ResponseEntity.ok(summaryDTO);
+    }
 }

@@ -17,7 +17,7 @@ public class ReportDTO {
         this.sellerName = sellerName;
     }
 
-    public ReportDTO(Sale sale){
+    public ReportDTO(Sale sale) {
         id = sale.getId();
         date = sale.getDate();
         amount = sale.getAmount();
