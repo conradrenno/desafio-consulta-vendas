@@ -11,10 +11,16 @@ import java.time.LocalDate;
 
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
-    @Query("SELECT obj " +
+    @Query(value = "SELECT obj " +
             "FROM Sale obj " +
+            "JOIN FETCH obj.seller " +
             "WHERE UPPER(obj.seller.name) LIKE UPPER(CONCAT('%', :name, '%')) " +
-            "AND (obj.date BETWEEN :minDate and :maxDate)")
+            "AND (obj.date BETWEEN :minDate and :maxDate)",
+            countQuery = "SELECT COUNT(obj) " +
+                    "FROM Sale obj " +
+                    "JOIN obj.seller " +
+                    "WHERE UPPER(obj.seller.name) LIKE UPPER(CONCAT('%', :name, '%')) " +
+                    "AND (obj.date BETWEEN :minDate and :maxDate)")
     public Page<Sale> searchBySellerNameAndDateRange(LocalDate minDate, LocalDate maxDate, String name, Pageable pageable);
 
     @Query("SELECT new com.devsuperior.dsmeta.dto.SummaryDTO(obj.seller.name, SUM(obj.amount)) " +
@@ -22,4 +28,5 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             "WHERE obj.date BETWEEN :minDate and :maxDate " +
             "GROUP BY obj.seller.name")
     public Page<SummaryDTO> searchSalesPerSellerByDateRange(LocalDate minDate, LocalDate maxDate, Pageable pageable);
+
 }
